@@ -118,6 +118,7 @@ submitButton.addEventListener('click', () => {
 		reloadButton.textContent = 'Try again!';
 		quizContainer.append(reloadButton);
 		quizContainer.classList.add('final-score');
+		reloadButton.classList.add('reload-button');
 		reloadButton.addEventListener('click', () => {
 			window.location.reload();
 		})
