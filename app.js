@@ -42,11 +42,90 @@ const quizInfo = [
 	  correctAnswer: "option4",
 	},
 	{
-	  question: "Whhich method is used to combine two or more strings?",
+	  question: "Which method is used to combine two or more strings?",
 	  optionA: "append()",
 	  optionB: "concat()",
 	  optionC: "typeof()",
 	  optionD: "attach()",
 	  correctAnswer: "option2",
 	},
-  ];
+];
+
+const quizContainer = document.querySelector('.quiz-container');
+const options = document.querySelectorAll('.option');
+const question = document.querySelector('.question-text');
+
+const optionA = document.querySelector('#option-a');
+const optionB = document.querySelector('#option-b');
+const optionC = document.querySelector('#option-c');
+const optionD = document.querySelector('#option-d');
+
+const errorMessage = document.querySelector('.error-message');
+const submitButton = document.querySelector('.submit-button');
+
+let currentIndex = 0;
+let score = 0;
+
+const deselectOptions = () => {
+	options.forEach(option => {
+		option.checked = false;
+	});
+}
+
+const handleQuiz = () => {
+	deselectOptions();
+
+	const activeIndex = quizInfo[currentIndex];
+	question.textContent = activeIndex.question;
+	optionA.textContent = activeIndex.optionA;
+	optionB.textContent = activeIndex.optionB;
+	optionC.textContent = activeIndex.optionC;
+	optionD.textContent = activeIndex.optionD;
+}
+
+const getAnswer = () => {
+	let answer;
+	options.forEach(option => {
+		if (option.checked) {
+			answer = option.id;
+		}
+	})
+	return answer;
+}
+
+handleQuiz();
+
+submitButton.addEventListener('click', () => {
+	const selectedAnswer = getAnswer();
+	if (!selectedAnswer) {
+		errorMessage.style.display = 'block';
+		return;
+	} else {
+		if (selectedAnswer === quizInfo[currentIndex].correctAnswer) {
+			score ++;
+		}
+	}
+	currentIndex ++;
+
+	if (currentIndex < quizInfo.length) {
+		handleQuiz();
+	} else {
+		quizContainer.textContent = '';
+		const finalScore = document.createElement('p');
+		finalScore.textContent = `Your score is ${score} out of ${quizInfo.length}`;
+		quizContainer.append(finalScore);
+		const reloadButton = document.createElement('button');
+		reloadButton.textContent = 'Try again!';
+		quizContainer.append(reloadButton);
+		quizContainer.classList.add('final-score');
+		reloadButton.addEventListener('click', () => {
+			window.location.reload();
+		})
+	}
+})
+
+options.forEach(option => {
+	option.addEventListener('click', () => {
+		errorMessage.style.display = 'none';
+	});
+});
